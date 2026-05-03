@@ -26,18 +26,18 @@ html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
 @st.cache_resource
 def load_pipeline():
     return {
-        "model":         joblib.load("model.pkl"),
-        "onehot":        joblib.load("onehot.pkl"),
-        "ordinal":       joblib.load("ordinal.pkl"),
-        "minmax":        joblib.load("minmax.pkl"),
-        "robust":        joblib.load("robust.pkl"),
-        "standard":      joblib.load("standard.pkl"),
-        "mean_canal":    joblib.load("mean_canal.pkl"),
-        "mean_region":   joblib.load("mean_region.pkl"),
-        "columns_order": joblib.load("columns_order.pkl"),
-        "standard_cols": joblib.load("standard_cols.pkl"),
-        "minmax_cols":   joblib.load("minmax_cols.pkl"),
-        "robust_cols":   joblib.load("robust_cols.pkl"),
+        "model":         joblib.load("pkl_files/model.pkl"),
+        "onehot":        joblib.load("pkl_files/onehot.pkl"),
+        "ordinal":       joblib.load("pkl_files/ordinal.pkl"),
+        "minmax":        joblib.load("pkl_files/minmax.pkl"),
+        "robust":        joblib.load("pkl_files/robust.pkl"),
+        "standard":      joblib.load("pkl_files/standard.pkl"),
+        "mean_canal":    joblib.load("pkl_files/mean_canal.pkl"),
+        "mean_region":   joblib.load("pkl_files/mean_region.pkl"),
+        "columns_order": joblib.load("pkl_files/columns_order.pkl"),
+        "standard_cols": joblib.load("pkl_files/standard_cols.pkl"),
+        "minmax_cols":   joblib.load("pkl_files/minmax_cols.pkl"),
+        "robust_cols":   joblib.load("pkl_files/robust_cols.pkl"),
     }
 
 @st.cache_data

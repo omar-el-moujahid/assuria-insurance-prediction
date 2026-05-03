@@ -27,7 +27,7 @@ TEMPLATE = "plotly_dark"
 
 @st.cache_data
 def load_clients_cibles():
-    return pd.read_csv("clients_cibles.csv")
+    return pd.read_csv("Data/clients_cibles.csv")
 
 @st.cache_data
 def load_train():
