@@ -16,45 +16,42 @@ Data Exploration → Feature Engineering → Modeling → Evaluation → Product
 
 ---
 
-## 🗂️ Repository Structure
+## 🗂️ Project Structure
 
 ```
-assuria-insurance-prediction/
+TP/
 │
 ├── Data/
-│   ├── train_info.csv              # Training dataset (labeled)
-│   └── clients_a_contacter.csv     # Production dataset (unlabeled)
+│   ├── train_info.csv                  # Labeled training dataset (381,109 clients)
+│   ├── clients_a_contacter.csv         # Unlabeled production dataset
+│   └── clients_cibles.csv              # Model output — targeted clients [0.3 – 0.7]
 │
 ├── pages/
-│   ├── 1_Contexte.py               # Project context page
-│   ├── 2_EDA.py                    # Exploratory Data Analysis page
-│   ├── 3_Modelisation.py           # Modeling results page
-│   ├── 4_Prediction.py             # Client targeting page
-│   ├── 5_Decision.py               # Decision support page
-│   └── 6_Prediction_individuelle.py # Individual prediction page
+│   ├── Contexte.py                     # Page 1 — Project context & variable descriptions
+│   ├── EDA.py                          # Page 2 — Interactive exploratory data analysis
+│   ├── Modelisation.py                 # Page 3 — Model results, ROC curve, feature importance
+│   ├── Prediction.py                   # Page 4 — Client targeting & filterable table
+│   ├── Decision.py                     # Page 5 — Decision support & marketing recommendations
+│   └── Prediction_individuelle.py      # Page 6 — Real-time individual prediction form
 │
-├── utils/
-│   └── data_loader.py              # Shared data loading functions
+├── pkl_files/
+│   ├── model.pkl                       # Trained XGBoost model
+│   ├── onehot.pkl                      # OneHotEncoder (categorical variables)
+│   ├── ordinal.pkl                     # OrdinalEncoder (age_vehicule)
+│   ├── minmax.pkl                      # MinMaxScaler
+│   ├── robust.pkl                      # RobustScaler
+│   ├── standard.pkl                    # StandardScaler
+│   ├── mean_canal.pkl                  # Business encoding — canal_communication
+│   ├── mean_region.pkl                 # Business encoding — code_regional
+│   ├── columns_order.pkl               # Training column order (alignment)
+│   ├── minmax_cols.pkl                 # Column list for MinMaxScaler
+│   ├── robust_cols.pkl                 # Column list for RobustScaler
+│   └── standard_cols.pkl              # Column list for StandardScaler
 │
-├── app.py                          # Streamlit main entry point
-├── TP.ipynb                        # EDA + Modeling notebook
-├── clinet_a_contacter.ipynb        # Production pipeline notebook
-├── clients_cibles.csv              # Targeted clients (model output)
-│
-├── model.pkl                       # Trained XGBoost model
-├── onehot.pkl                      # OneHotEncoder
-├── ordinal.pkl                     # OrdinalEncoder
-├── minmax.pkl                      # MinMaxScaler
-├── robust.pkl                      # RobustScaler
-├── standard.pkl                    # StandardScaler
-├── mean_canal.pkl                  # Canal communication encoding
-├── mean_region.pkl                 # Regional code encoding
-├── columns_order.pkl               # Training columns order
-├── standard_cols.pkl               # Columns for StandardScaler
-├── minmax_cols.pkl                 # Columns for MinMaxScaler
-├── robust_cols.pkl                 # Columns for RobustScaler
-│
-├── requirements.txt                # Python dependencies
+├── app.py                              # Streamlit entry point
+├── TP.ipynb                            # EDA + Feature Engineering + Modeling notebook
+├── clinet_a_contacter.ipynb           # Production pipeline notebook
+├── requirements.txt                    # Python dependencies
 └── README.md
 ```
 
@@ -66,6 +63,7 @@ assuria-insurance-prediction/
 |------|------|-------------|
 | `train_info.csv` | 381,109 | Labeled clients used for training and evaluation |
 | `clients_a_contacter.csv` | — | Unlabeled clients for production predictions |
+| `clients_cibles.csv` | — | Output — clients in the uncertainty zone [0.3 – 0.7] |
 
 ### Variables
 
@@ -120,34 +118,30 @@ assuria-insurance-prediction/
 
 ### 5. Targeting Strategy
 
-Clients are targeted based on their predicted probability:
-
 | Probability | Decision | Reason |
 |-------------|----------|--------|
 | `< 0.3` | ❌ Do not contact | Low ROI |
-| `[0.3 – 0.7]` | ✅ **Contact — priority** | Uncertainty zone, action can influence decision |
+| `[0.3 – 0.7]` | ✅ **Contact — priority** | Uncertainty zone |
 | `> 0.7` | ❌ Do not contact | Likely to subscribe without intervention |
 
 ---
 
 ## 🖥️ Streamlit Dashboard
 
-The **AssurIA** dashboard covers the full Data Science pipeline across 6 interactive pages:
-
-| Page | Description |
-|------|-------------|
-| 📋 Context | Project overview, variable descriptions, KPIs |
-| 🔍 EDA | Interactive charts, filters, Spearman correlation heatmap |
-| 🤖 Modeling | Confusion matrix, ROC curve, feature importance |
-| 🎯 Prediction & Targeting | Targeted clients table, probability distribution, CSV export |
-| 💡 Decision Support | Client profiles, comparisons, marketing recommendations |
-| 🔮 Individual Prediction | Real-time prediction form for a single client |
+| Page | File | Description |
+|------|------|-------------|
+| 📋 Context | `Contexte.py` | Project overview, KPIs, variable descriptions |
+| 🔍 EDA | `EDA.py` | Interactive charts, filters, Spearman heatmap |
+| 🤖 Modeling | `Modelisation.py` | Confusion matrix, ROC curve, feature importance |
+| 🎯 Prediction & Targeting | `Prediction.py` | Filtered client table, probability distribution, CSV export |
+| 💡 Decision Support | `Decision.py` | Client profiles, comparisons, marketing recommendations |
+| 🔮 Individual Prediction | `Prediction_individuelle.py` | Real-time prediction form for a single client |
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -159,20 +153,7 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### Requirements
-
-```
-streamlit>=1.32.0
-pandas>=2.0.0
-numpy>=1.26.0
-plotly>=5.18.0
-scikit-learn>=1.4.0
-xgboost>=2.0.0
-joblib>=1.3.0
-imbalanced-learn>=0.12.0
-```
-
-> **Note:** The `.pkl` files (model and encoders) must be present in the root directory. Run `TP.ipynb` first to generate them.
+> **Note:** Make sure you run `TP.ipynb` first to generate all `.pkl` files inside the `pkl_files/` folder, then run `clinet_a_contacter.ipynb` to generate `clients_cibles.csv` inside `Data/`.
 
 ---
 
@@ -180,8 +161,8 @@ imbalanced-learn>=0.12.0
 
 - ✅ `TP.ipynb` — Full EDA and modeling notebook
 - ✅ `clinet_a_contacter.ipynb` — Production pipeline notebook
-- ✅ Streamlit dashboard (AssurIA)
-- ✅ Synthetic report (PDF)
+- ✅ Streamlit dashboard (AssurIA) — 6 interactive pages
+- ✅ Synthetic report (PDF + LaTeX source)
 
 ---
 
